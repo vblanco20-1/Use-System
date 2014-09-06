@@ -16,7 +16,7 @@ In the case you want both c++ and blueprints, implementing your own OnUsed in c+
 	or 
 	IUsable::Execute_BTOnFocus(this, user);
 	
-	in your respective OnUsed and OnFocus functions, so it calls the blueprint event, ending somewhat like this
+in your respective OnUsed and OnFocus functions, so it calls the blueprint event, ending somewhat like this
 	
 	void Ayourclass::OnUsed(AController*user)
 	{
