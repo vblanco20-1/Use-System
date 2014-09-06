@@ -27,5 +27,7 @@ in your respective OnUsed and OnFocus functions, so it calls the blueprint event
 	IUsable::Execute_BTOnUsed(this, user); 
 	}
 
-	
+Here you can see an example of how to use it in blueprints https://www.youtube.com/watch?v=flISoAMGqAQ
+
+
 You are free to do whatever you want with the code.
