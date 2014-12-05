@@ -150,7 +150,7 @@ void AMyProjectCharacter::UseTarget()
 	if (HitTarget.GetActor())
 	{
 		// Cast to IUsable for the C++ implementation of the interface
-		IUsable* usable = InterfaceCast<IUsable>(HitTarget.GetActor());
+		IUsable* usable =Cast<IUsable>(HitTarget.GetActor());
 		if (usable)
 		{
 			usable->OnUsed(GetController());
