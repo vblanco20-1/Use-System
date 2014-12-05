@@ -1,19 +1,21 @@
+// Victor Blanco Ruiz, no license, do what you want with this
+
 #pragma once
 #include "Usable.generated.h"
 
 /**This interface has to be added to every Actor that can be used, you have to implement the OnUsed function */
-UINTERFACE(MinimalAPI,Blueprintable)
+UINTERFACE(MinimalAPI, Blueprintable)
 class UUsable :public UInterface
 {
 	GENERATED_UINTERFACE_BODY()
-	
+
 };
 
 class IUsable
 {
 	GENERATED_IINTERFACE_BODY()
 
-	
+
 	virtual void OnUsed(AController * user);
 
 	virtual void  OnFocus(AController * user);
@@ -27,5 +29,5 @@ class IUsable
 
 	//This event will be called every frame if the object is being watched by the Use System in the HUD
 	UFUNCTION(BlueprintImplementableEvent, meta = (FriendlyName = " On Focus"))
-	void  BTOnFocus( AController * user);
+	void  BTOnFocus(AController * user);
 };

@@ -11,26 +11,28 @@
 //////////////////////////////////////////////////////////////////////////
 // AMyProjectCharacter
 
-AMyProjectCharacter::AMyProjectCharacter(const class FPostConstructInitializeProperties& PCIP)
-	: Super(PCIP)
+
+AMyProjectCharacter::AMyProjectCharacter(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
 {
 	// Set size for collision capsule
-	CapsuleComponent->InitCapsuleSize(42.f, 96.0f);
+	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 
 	// set our turn rates for input
 	BaseTurnRate = 45.f;
 	BaseLookUpRate = 45.f;
 
 	// Create a CameraComponent	
-	FirstPersonCameraComponent = PCIP.CreateDefaultSubobject<UCameraComponent>(this, TEXT("FirstPersonCamera"));
-	FirstPersonCameraComponent->AttachParent = CapsuleComponent;
+	FirstPersonCameraComponent = ObjectInitializer.CreateDefaultSubobject<UCameraComponent>(this, TEXT("FirstPersonCamera"));
+	FirstPersonCameraComponent->AttachParent = GetCapsuleComponent();
 	FirstPersonCameraComponent->RelativeLocation = FVector(0, 0, 64.f); // Position the camera
+	FirstPersonCameraComponent->bUsePawnControlRotation = true;
 
 	// Default offset from the character location for projectiles to spawn
 	GunOffset = FVector(100.0f, 30.0f, 10.0f);
 
 	// Create a mesh component that will be used when being viewed from a '1st person' view (when controlling this pawn)
-	Mesh1P = PCIP.CreateDefaultSubobject<USkeletalMeshComponent>(this, TEXT("CharacterMesh1P"));
+	Mesh1P = ObjectInitializer.CreateDefaultSubobject<USkeletalMeshComponent>(this, TEXT("CharacterMesh1P"));
 	Mesh1P->SetOnlyOwnerSee(true);			// only the owning player will see this mesh
 	Mesh1P->AttachParent = FirstPersonCameraComponent;
 	Mesh1P->RelativeLocation = FVector(0.f, 0.f, -150.f);
@@ -40,7 +42,6 @@ AMyProjectCharacter::AMyProjectCharacter(const class FPostConstructInitializePro
 	// Note: The ProjectileClass and the skeletal mesh/anim blueprints for Mesh1P are set in the
 	// derived blueprint asset named MyCharacter (to avoid direct content references in C++)
 }
-
 //////////////////////////////////////////////////////////////////////////
 // Input
 
@@ -172,7 +173,7 @@ void AMyProjectCharacter::Tick(float DeltaSeconds)
 	if (HitTarget.GetActor())
 	{
 		// Cast to IUsable for the C++ implementation of the interface
-		IUsable* usable = InterfaceCast<IUsable>(HitTarget.GetActor());
+		IUsable* usable = Cast<IUsable>(HitTarget.GetActor());
 		if (usable)
 		{
 			usable->OnFocus(GetController());

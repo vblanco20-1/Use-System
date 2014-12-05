@@ -6,15 +6,17 @@
 UCLASS(config=Game)
 class AMyProjectCharacter : public ACharacter
 {
-	GENERATED_UCLASS_BODY()
+	GENERATED_BODY()
 
 	/** Pawn mesh: 1st person view (arms; seen only by self) */
 	UPROPERTY(VisibleDefaultsOnly, Category=Mesh)
-	TSubobjectPtr<class USkeletalMeshComponent> Mesh1P;
+	class USkeletalMeshComponent* Mesh1P;
 
 	/** First person camera */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
-	TSubobjectPtr<class UCameraComponent> FirstPersonCameraComponent;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	class UCameraComponent* FirstPersonCameraComponent;
+public:
+	AUseTestCharacter(const FObjectInitializer& ObjectInitializer);
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
@@ -30,7 +32,7 @@ class AMyProjectCharacter : public ACharacter
 
 	/** Projectile class to spawn */
 	UPROPERTY(EditDefaultsOnly, Category=Projectile)
-	TSubclassOf<class AMyProjectProjectile> ProjectileClass;
+	TSubclassOf<class AUseTestProjectile> ProjectileClass;
 
 	/** Sound to play each time we fire */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
@@ -39,9 +41,6 @@ class AMyProjectCharacter : public ACharacter
 	/** AnimMontage to play each time we fire */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	class UAnimMontage* FireAnimation;
-
-	virtual void Tick(float DeltaSeconds);
-
 
 protected:
 
@@ -74,16 +73,18 @@ protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
 	// End of APawn interface
 
-	//The range you can have to use an object
-	UPROPERTY(EditAnywhere, Category = UseSystem)
-	float UseRange;
+public:
+	/** Returns Mesh1P subobject **/
+	FORCEINLINE class USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
+	/** Returns FirstPersonCameraComponent subobject **/
+	FORCEINLINE class UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 
-	//you call this to actually do the Use action
 	UFUNCTION(BlueprintCallable, Category = Interaction)
-	virtual void UseTarget();
+	virtual	void TraceViewTarget(FHitResult &HitResult);
 
-	// this simple function will return the hit result from camera trace
-	UFUNCTION()
-	void TraceViewTarget(FHitResult &HitResult);
+	virtual void Tick(float DeltaSeconds) override;
+
+	UFUNCTION(BlueprintCallable, Category = Use)
+	virtual void UseTarget();
 };
 
