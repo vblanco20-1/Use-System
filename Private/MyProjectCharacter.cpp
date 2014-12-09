@@ -187,7 +187,10 @@ void AMyProjectCharacter::Tick(float DeltaSeconds)
 }
 void AMyProjectCharacter::TraceViewTarget(FHitResult &HitResult)
 {
-
+	
+	//default range for the use trace, you could add this to properties if you want it editable
+	const float UseRange = 200;
+	
 	// do a trace from view location, in the direction you are aiming, to get the object under the crosshair
 	FCollisionQueryParams TraceParams("UseTrace", false, this);
 	FVector TraceStart = GetPawnViewLocation();
